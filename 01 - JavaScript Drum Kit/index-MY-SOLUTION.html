@@ -58,23 +58,27 @@
 
     <script>
       document.addEventListener("keydown", function (e) {
-        let pressedKeyAsAsciiCode = e.key.toUpperCase().charCodeAt(0);
-
+        let pressedKeyCode = e.keyCode;
         let audioMatchedWithKey = document.querySelector(
-          `audio[data-key="${pressedKeyAsAsciiCode}"]`
+          `audio[data-key="${pressedKeyCode}"]`
         );
         let divMatchedWithKey = document.querySelector(
-          `div[data-key="${pressedKeyAsAsciiCode}"]`
+          `div[data-key="${pressedKeyCode}"]`
         );
 
-        if (audioMatchedWithKey && divMatchedWithKey) {
-          audioMatchedWithKey.currentTime = 0;
-          audioMatchedWithKey.play();
-          divMatchedWithKey.classList.toggle("playing");
+        if (!audioMatchedWithKey || !divMatchedWithKey) return;
 
-          setTimeout(() => divMatchedWithKey.classList.toggle("playing"), 100);
-        }
+        audioMatchedWithKey.currentTime = 0;
+        audioMatchedWithKey.play();
+        divMatchedWithKey.classList.add("playing");
       });
+
+      let keys = document.querySelectorAll(".key");
+      keys.forEach((key) =>
+        key.addEventListener("transitionend", function () {
+          this.classList.remove("playing");
+        })
+      );
     </script>
   </body>
 </html>
