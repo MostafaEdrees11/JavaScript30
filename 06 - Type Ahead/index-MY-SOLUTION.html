@@ -46,11 +46,18 @@
           const html = `
                 <li>
                     <span class="name">${data.city}, ${data.state}</span>
-                    <span class="population">${data.population}</span>
+                    <span class="population">${numberWithCommas(
+                      data.population
+                    )}</span>
                 </li>`;
           suggestionsLis.insertAdjacentHTML("beforeend", html);
         });
       });
+
+      // Source - https://stackoverflow.com/questions/2901102/how-to-format-a-number-with-commas-as-thousands-separators
+      function numberWithCommas(x) {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      }
     </script>
   </body>
 </html>
