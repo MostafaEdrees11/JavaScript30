@@ -28,8 +28,8 @@
         .then((response) => response.json())
         .then((data) => responseData.push(...data));
 
-      inputField.addEventListener("keyup", function () {
-        filteredData = responseData.filter(function (data) {
+      let matchedData = function (inputValue, fullData) {
+        return fullData.filter(function (data) {
           let city = data.city.toLowerCase();
           let state = data.state.toLowerCase();
           return (
@@ -37,21 +37,42 @@
             state.includes(inputField.value.toLowerCase())
           );
         });
+      };
 
+      let displayMatcedData = function (matchedData) {
         suggestionsLis.innerHTML = "";
-        filteredData.forEach((data) => {
+        matchedData.forEach((data) => {
           let city = data.city.toLowerCase();
           let state = data.state.toLowerCase();
 
+          let newFormatOfCity = city.includes(inputField.value.toLowerCase())
+            ? city.replace(
+                inputField.value.toLowerCase(),
+                `<span class="hl">${inputField.value}</span>`
+              )
+            : city;
+
+          let newFormatOfState = state.includes(inputField.value.toLowerCase())
+            ? state.replace(
+                inputField.value.toLowerCase(),
+                `<span class="hl">${inputField.value}</span>`
+              )
+            : state;
+
           const html = `
                 <li>
-                    <span class="name">${data.city}, ${data.state}</span>
+                    <span class="name">${newFormatOfCity}, ${newFormatOfState}</span>
                     <span class="population">${numberWithCommas(
                       data.population
                     )}</span>
                 </li>`;
           suggestionsLis.insertAdjacentHTML("beforeend", html);
         });
+      };
+
+      inputField.addEventListener("keyup", function () {
+        filteredData = matchedData(inputField.value, responseData);
+        displayMatcedData(filteredData);
       });
 
       // Source - https://stackoverflow.com/questions/2901102/how-to-format-a-number-with-commas-as-thousands-separators
