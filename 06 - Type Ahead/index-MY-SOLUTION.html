@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Type Ahead 👀</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" href="https://fav.farm/🔥" />
+  </head>
+  <body>
+    <form class="search-form">
+      <input type="text" class="search" placeholder="City or State" />
+      <ul class="suggestions">
+        <li>Filter for a city</li>
+        <li>or a state</li>
+      </ul>
+    </form>
+    <script>
+      const endpoint =
+        "https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json";
+
+      let inputField = document.querySelector(".search");
+      let suggestionsLis = document.querySelector(".suggestions");
+      let responseData = [],
+        filteredData = null;
+
+      // Fetch data using fetch
+      fetch(endpoint)
+        .then((response) => response.json())
+        .then((data) => responseData.push(...data));
+
+      inputField.addEventListener("keyup", function () {
+        filteredData = responseData.filter(function (data) {
+          let city = data.city.toLowerCase();
+          let state = data.state.toLowerCase();
+          return (
+            city.includes(inputField.value.toLowerCase()) ||
+            state.includes(inputField.value.toLowerCase())
+          );
+        });
+
+        suggestionsLis.innerHTML = "";
+        filteredData.forEach((data) => {
+          let city = data.city.toLowerCase();
+          let state = data.state.toLowerCase();
+
+          const html = `
+                <li>
+                    <span class="name">${data.city}, ${data.state}</span>
+                    <span class="population">${data.population}</span>
+                </li>`;
+          suggestionsLis.insertAdjacentHTML("beforeend", html);
+        });
+      });
+    </script>
+  </body>
+</html>
