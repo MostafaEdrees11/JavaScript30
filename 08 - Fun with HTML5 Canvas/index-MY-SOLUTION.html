@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>HTML5 Canvas</title>
+    <link rel="icon" href="https://fav.farm/🔥" />
+  </head>
+  <body>
+    <canvas id="draw" width="800" height="800"></canvas>
+    <script>
+      let canvas = document.getElementById("draw");
+      const ctx = canvas.getContext("2d");
+
+      // Setup the canvas to take the full screen
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      // Setup the ctx
+      // Set the initial color of the stroke
+      ctx.strokeStyle = "red";
+      // Setup the edegs shape of the stroke
+      ctx.lineJoin = "round";
+      ctx.lineCap = "round";
+      // Setup the width of the stroke
+      ctx.lineWidth = 10;
+
+      // Setup the endpoints of stroke
+      let lastX = 0,
+        lastY = 0;
+
+      // Setup the changed color of stroke
+      let strokeColor = 0;
+      let strokeLineWidth = 10;
+      let isStrokeLineWidthIncreasing = true;
+
+      let isDrawing = false;
+
+      function draw(e) {
+        if (!isDrawing) return;
+
+        // Change color of stroke
+        ctx.strokeStyle = `hsl(${strokeColor}, 100%, 50%)`;
+
+        // Start drawing
+        ctx.beginPath();
+        ctx.moveTo(lastX, lastY);
+        ctx.lineTo(e.offsetX, e.offsetY);
+        ctx.stroke();
+
+        // Update endpoints
+        [lastX, lastY] = [e.offsetX, e.offsetY];
+
+        // increase the value of strokeColor
+        if (strokeColor >= 360) strokeColor = 0;
+        strokeColor++;
+
+        // decrease the line width if it larger than 100 and increase it if it less than 0
+        if (ctx.lineWidth > 100 || ctx.lineWidth <= 1)
+          isStrokeLineWidthIncreasing = !isStrokeLineWidthIncreasing;
+
+        if (isStrokeLineWidthIncreasing) ctx.lineWidth++;
+        else ctx.lineWidth--;
+      }
+
+      canvas.addEventListener("mousemove", draw);
+
+      //   Start drawing when we click on the mouse
+      canvas.addEventListener("mousedown", (e) => {
+        isDrawing = true;
+
+        // Update endpoints
+        [lastX, lastY] = [e.offsetX, e.offsetY];
+      });
+
+      // Stop drawing if we out from the screen or we let the mouse
+      canvas.addEventListener("mouseup", () => (isDrawing = false));
+      canvas.addEventListener("mouseout", () => (isDrawing = false));
+    </script>
+
+    <style>
+      html,
+      body {
+        margin: 0;
+      }
+    </style>
+  </body>
+</html>
