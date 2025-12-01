@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Console Tricks!</title>
+    <link rel="icon" href="https://fav.farm/🔥" />
+  </head>
+  <body>
+    <p onClick="makeGreen()">×BREAK×DOWN×</p>
+
+    <script>
+      const dogs = [
+        { name: "Snickers", age: 2 },
+        { name: "hugo", age: 8 },
+      ];
+
+      function makeGreen() {
+        const p = document.querySelector("p");
+        p.style.color = "#BADA55";
+        p.style.fontSize = "50px";
+      }
+
+      // Regular
+      console.log("print Mostafa Edrees using regular console.log()");
+
+      // Interpolated
+      console.log(
+        "print %s and %d using interpolated console.log() with \%s and \%d like printf in C",
+        "Mostafa Edrees",
+        23
+      );
+
+      // Styled
+      console.log(
+        "%cStyling this text",
+        "font-size: 25px; background-color: green; color: white; border: 1px solid black; padding: 8px;"
+      );
+
+      // warning!
+      console.warn("This is warning message ⚠⚠");
+
+      // Error :|
+      console.error("This is error message 🚨🚨");
+
+      // Info
+      console.info("This is info message ℹ ℹ");
+
+      // Testing
+      // test if there is no p exist
+      console.assert(
+        document.querySelector("p"),
+        "There is no paragraph at the document ‼"
+      );
+      // test if there is no a exist
+      console.assert(
+        document.querySelector("a"),
+        "There is no anchor tags at the document ‼"
+      );
+
+      // clearing
+      // clear the console
+      // console.clear();
+
+      // Viewing DOM Elements
+      const p = document.querySelector("p");
+      // this print element as HTML content
+      console.log(p);
+      // this print element as object and we can navigate its methods & events
+      console.dir(p);
+
+      // Grouping together
+      dogs.forEach((dog) => {
+        // group() if we need the group is opened, but if we need it closed we use groupCollapsed()
+        // console.group(`${dog.name}`);
+        console.groupCollapsed(`${dog.name}`);
+        console.log(`${dog.name}'s data: `);
+        console.log(`Name: ${dog.name}.`);
+        console.log(`Age: ${dog.age} years old.`);
+        console.groupEnd(`${dog.name}`);
+      });
+
+      // counting
+      // if we need to count "Mostafa", "Edrees" and print word with its count --> Mostafa: n
+      console.count("Mostafa");
+      console.count("Edrees");
+      console.count("Mostafa");
+      console.count("Edrees");
+      console.count("Mostafa");
+      console.count("Mostafa");
+      console.count("Mostafa");
+      console.count("Edrees");
+      console.count("Mostafa");
+
+      // timing
+      // if we need to calculat the time to do specific task.
+      console.time("Fetch data from API");
+      fetch(
+        "https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json"
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          console.timeEnd("Fetch data from API");
+          console.log(data);
+        });
+
+      // table
+      // print data from array of objects as table (good visual)
+      console.table(dogs);
+    </script>
+  </body>
+</html>
