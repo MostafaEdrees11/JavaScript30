@@ -51,65 +51,89 @@
       <form class="add-items">
         <input type="text" name="item" placeholder="Item Name" required />
         <input type="submit" value="+ Add Item" />
+
+        <div>
+          <input type="button" value="Delete All" id="delete-all" />
+          <input type="button" value="Check All" id="check-all" />
+          <input type="button" value="Uncheck All" id="uncheck-all" />
+        </div>
       </form>
     </div>
 
     <script>
       const addItems = document.querySelector(".add-items");
       const itemsList = document.querySelector(".plates");
-      const itemText = document.querySelector(".add-items input[type='text']");
-      let items = [],
-        numOfItems = 0;
+      let items = JSON.parse(localStorage.getItem("items")) ?? [];
 
-      items = JSON.parse(localStorage.getItem("items")) ?? [];
-      if (items.length > 0) {
-        updateItemsListUI(items);
-        updateLabelUI(items);
-      }
+      updateItemsListUI(items);
+      // updateLabelUI(items);
 
       function addNewItem(e) {
         e.preventDefault();
-        const item = { text: itemText.value, done: false };
-        itemText.value = "";
+        const itemTextInput = this.querySelector("input[name='item']");
+        const item = { text: itemTextInput.value, done: false };
+        itemTextInput.value = "";
         items.push(item);
         updateItemsListUI(items);
-        updateLabelUI(items);
+        localStorage.setItem("items", JSON.stringify(items));
       }
 
       addItems.addEventListener("submit", addNewItem);
 
-      function updateItemsListUI(items) {
+      function updateItemsListUI(items = []) {
         itemsList.innerHTML = "";
-        numOfItems = 0;
-        items.forEach((item) => {
+        items.forEach((item, index) => {
           const html = `
             <li>
-              <input type="checkbox" id=item${numOfItems} data-index=${numOfItems} ${
+              <input type="checkbox" id=item${index} data-index=${index} ${
             item.done ? "checked" : ""
           }/>
-              <label for=item${numOfItems}>${item.text}</label>
-              <hr/>
+              <label for=item${index}>${item.text}</label>
             </li>`;
-          numOfItems++;
 
           itemsList.insertAdjacentHTML("beforeend", html);
         });
+      }
+
+      function toggleCheck(e) {
+        // match only input child
+        if (!e.target.matches("input")) return;
+
+        let inputLabel = e.target;
+        let index = +inputLabel.dataset["index"];
+        items[index].done = !items[index].done;
         localStorage.setItem("items", JSON.stringify(items));
       }
 
-      function updateLabelUI(items) {
-        const labels = [...document.querySelectorAll("label")];
-        labels.forEach((label) =>
-          label.addEventListener("click", function () {
-            let index = +this.getAttribute("for").split("").splice(-1).join();
-            let inputRelatedWithLabel = document.querySelector(
-              `input[data-index="${index}"]`
-            );
-            items[index].done = !inputRelatedWithLabel.checked;
-            localStorage.setItem("items", JSON.stringify(items));
-          })
-        );
+      // event delegation to its children
+      itemsList.addEventListener("click", toggleCheck);
+
+      // This is the challenge required at the end of the video
+      const deleteBTN = document.querySelector("#delete-all");
+      const checkAllBTN = document.querySelector("#check-all");
+      const unCheckAllBTN = document.querySelector("#uncheck-all");
+
+      function deleteAllItems(items) {
+        items.splice(0);
+        updateItemsListUI(items);
+        localStorage.setItem("items", JSON.stringify(items));
       }
+      deleteBTN.addEventListener("click", deleteAllItems.bind(null, items));
+
+      function changeAllItemsState(items, checkAll) {
+        items.forEach((item) => (item.done = checkAll));
+        updateItemsListUI(items);
+        localStorage.setItem("items", JSON.stringify(items));
+      }
+      checkAllBTN.addEventListener(
+        "click",
+        changeAllItemsState.bind(null, items, true)
+      );
+
+      unCheckAllBTN.addEventListener(
+        "click",
+        changeAllItemsState.bind(null, items, false)
+      );
     </script>
   </body>
 </html>
