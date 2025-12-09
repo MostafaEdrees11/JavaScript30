@@ -61,23 +61,17 @@
         "An Old Dog",
       ];
 
-      const articles = ["A ", "An ", "The "];
-      const bandsWithoutArticles = bands.map((band, index) => {
-        for (let i = 0; i < articles.length; i++) {
-          if (band.includes(articles[i]))
-            return { key: index, value: band.replace(articles[i], "") };
-        }
-        return { key: index, value: band };
-      });
-
-      bandsWithoutArticles.sort(
-        (a, b) => a.value.charCodeAt() - b.value.charCodeAt()
-      );
-
       const ul = document.querySelector("#bands");
-      for (obj of bandsWithoutArticles) {
-        ul.insertAdjacentHTML("beforeend", `<li>${bands[obj.key]}</li>`);
+
+      function stripArticles(band) {
+        return band.replace(/^(a |the |an )/i, "").trim();
       }
+
+      bands
+        .sort((a, b) => (stripArticles(a) > stripArticles(b) ? 1 : -1))
+        .forEach((band) =>
+          ul.insertAdjacentHTML("beforeend", `<li>${band}</li>`)
+        );
     </script>
   </body>
 </html>
