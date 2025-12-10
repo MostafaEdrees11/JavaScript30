@@ -69,30 +69,26 @@
     <script>
       const videos = [...document.querySelectorAll("[data-time]")];
 
-      const timeArrOfEachVideo = videos.map((video) => video.dataset["time"]);
-
-      let totalHours = 0,
-        totalMinutes = 0,
-        totalSeconds = 0;
-
-      timeArrOfEachVideo.forEach((video) => {
-        let [minutes, seconds] = video.split(":");
-
-        if (totalMinutes + +minutes > 60) {
-          totalHours++;
-          totalMinutes += +minutes - 60;
-        } else {
-          totalMinutes += +minutes;
-        }
-
-        if (totalSeconds + +seconds > 60) {
-          totalMinutes++;
-          totalSeconds += +seconds - 60;
-        } else {
-          totalSeconds += +seconds;
-        }
+      //  Solve it on oneshot using reduce function
+      const totalVideosTimeAsSeconds = videos.reduce((acc, cur) => {
+        let [minutes, seconds] = cur.dataset["time"].split(":");
+        return acc + +seconds + +minutes * 60;
       }, 0);
 
+      //   Solve it on mulitple steps using map & reduce function
+      //   const totalVideosTimeAsSeconds = videos
+      //     .map((video) => video.dataset["time"])
+      //     .map((time) => {
+      //       let [minutes, seconds] = time.split(":");
+      //       return +seconds + +minutes * 60;
+      //     })
+      //     .reduce((acc, cur) => acc + cur, 0);
+
+      let reminder = 0;
+      let totalHours = Math.trunc(totalVideosTimeAsSeconds / 3600);
+      reminder = totalVideosTimeAsSeconds % 3600;
+      let totalMinutes = Math.trunc(reminder / 60);
+      let totalSeconds = reminder % 60;
       console.log(totalHours, totalMinutes, totalSeconds);
     </script>
   </body>
