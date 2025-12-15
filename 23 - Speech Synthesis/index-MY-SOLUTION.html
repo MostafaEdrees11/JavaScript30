@@ -77,18 +77,15 @@
             msg.text = options[2].value;
             console.log(msg);
 
-            synth.cancel(msg);
+            synth.cancel();
             synth.speak(msg);
         }
 
         speakButton.addEventListener('click', readText);
-        options[0].addEventListener('input', readText);
-        options[1].addEventListener('input', readText);
+        options.forEach(option => option.addEventListener('change', readText));
         voicesDropdown.addEventListener('change', readText);
 
-        stopButton.addEventListener('click', () => {
-            synth.pause();
-        })
+        stopButton.addEventListener('click', () => synth.cancel());
     </script>
 </body>
 
