@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Video Speed Scrubber</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="https://fav.farm/🔥" />
+</head>
+
+<body>
+
+    <div class="wrapper">
+        <video class="flex" width="765" height="430" src="./652333414.mp4" loop controls></video>
+        <div class="speed">
+            <div class="speed-bar">1×</div>
+        </div>
+    </div>
+
+    <script>
+        const video = document.querySelector('video');
+        const speedController = document.querySelector('.speed');
+        const speedValue = document.querySelector('.speed-bar');
+
+        let isMouseInSpeedController = false;
+        const speedControllerDimenions = speedController.getBoundingClientRect();
+        // console.log(speedControllerDimenions, speedControllerDimenions.height);
+
+        function controlSpeed(e) {
+            if (!isMouseInSpeedController) return;
+
+            // console.log(this);
+            // console.log(e.pageY);
+            let speed = ((e.pageY - speedControllerDimenions.top) / speedControllerDimenions.height) * 4;
+            let speedPercentage = ((e.pageY - speedControllerDimenions.top) / speedControllerDimenions.height) * 100;
+            // console.log(speed.toFixed(2));
+            console.log(speedPercentage);
+            if (speed > 0.08) {
+                video.playbackRate = speed;
+                speedValue.innerHTML = `${speed.toFixed(2)}x`;
+                speedValue.style.setProperty('height', `${speedPercentage}%`);
+            }
+        }
+
+        speedController.addEventListener('mousemove', controlSpeed);
+        speedController.addEventListener('mouseenter', () => isMouseInSpeedController = true);
+        speedController.addEventListener('mouseleave', () => isMouseInSpeedController = false);
+    </script>
+</body>
+
+</html>
