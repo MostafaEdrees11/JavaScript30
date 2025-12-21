@@ -24,14 +24,16 @@ function updateEndTime(timeObj) {
 }
 
 function updateCountdownTimer(totalTime, timeObj) {
-    timeLeft.innerHTML = `${String(timeObj.hours).padStart(2, 0)}:${String(timeObj.minutes).padStart(2, 0)}:${String(timeObj.seconds).padStart(2, 0)}`
+    timeLeft.innerHTML = `${String(timeObj.hours).padStart(2, 0)}:${String(timeObj.minutes).padStart(2, 0)}:${String(timeObj.seconds).padStart(2, 0)}`;
+    document.title = timeLeft.innerHTML;
 
     counterInterval = setInterval(() => {
         if (totalTime === 0) return clearInterval(counterInterval);
 
         totalTime--;
         timeObj = convertSecondsIntoHrMiSe(totalTime);
-        timeLeft.innerHTML = `${String(timeObj.hours).padStart(2, 0)}:${String(timeObj.minutes).padStart(2, 0)}:${String(timeObj.seconds).padStart(2, 0)}`
+        timeLeft.innerHTML = `${String(timeObj.hours).padStart(2, 0)}:${String(timeObj.minutes).padStart(2, 0)}:${String(timeObj.seconds).padStart(2, 0)}`;
+        document.title = timeLeft.innerHTML;
     }, 1000);
 }
 
